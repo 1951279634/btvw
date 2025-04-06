@@ -51,16 +51,17 @@ jobs:
           cat _worker.js >> src/index.ts
           echo "\`;" >> src/index.ts
 
-      - name: Generate wrangler.jsonc file
+      - name: Generate wrangler.jsonc with current date
         run: |
-          mkdir -p src
+          TODAY=$(date +%F)
           echo '{
-            "main": "./src/index.ts"
-          }' > wrangler.jsonc
-
-      - name: Delete _worker.js
-        run: |
-          rm -f _worker.js
+  "name": "btvw",
+  "compatibility_date": "'$TODAY'",
+  "main": "src/index.ts",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}' > wrangler.jsonc
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
