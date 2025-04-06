@@ -53,9 +53,14 @@ jobs:
 
       - name: Generate wrangler.jsonc file
         run: |
+          mkdir -p src
           echo '{
             "main": "./src/index.ts"
           }' > wrangler.jsonc
+
+      - name: Delete _worker.js
+        run: |
+          rm -f _worker.js
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
