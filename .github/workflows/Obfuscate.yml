@@ -44,18 +44,24 @@ jobs:
           --self-defending false \
           --simplify true
 
-      - name: Copy obfuscated JS to index.ts in src directory
+      - name: Create src/index.ts with embedded _worker.js
         run: |
           mkdir -p src
-          echo "const workerScript = \`" > src/index.ts
+          echo 'export default `' > src/index.ts
           cat _worker.js >> src/index.ts
-          echo "\`;" >> src/index.ts
+          echo '`;' >> src/index.ts
 
-      - name: Generate wrangler.jsonc file
+      - name: Create wrangler.jsonc with current date
         run: |
-          echo '{
-            "main": "./src/index.ts"
-          }' > wrangler.jsonc
+          CURRENT_DATE=$(date +'%Y-%m-%d')
+          echo '{' > wrangler.jsonc
+          echo '  "name": "btvw",' >> wrangler.jsonc
+          echo "  \"compatibility_date\": \"${CURRENT_DATE}\"," >> wrangler.jsonc
+          echo '  "main": "src/index.ts",' >> wrangler.jsonc
+          echo '  "compatibility_flags": [' >> wrangler.jsonc
+          echo '    "nodejs_compat"' >> wrangler.jsonc
+          echo '  ]' >> wrangler.jsonc
+          echo '}' >> wrangler.jsonc
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
