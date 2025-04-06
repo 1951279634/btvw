@@ -44,6 +44,17 @@ jobs:
           --self-defending false \
           --simplify true
 
+      - name: Create wrangler.jsonc
+        run: |
+          echo '{
+            "name": "btvp-worker",
+            "compatibility_date": "'$(date +%Y-%m-%d)'",
+            "main": "src/index.ts",
+            "compatibility_flags": [
+              "nodejs_compat"
+            ]
+          }' > wrangler.jsonc
+
       - name: Move to index.ts
         run: |
           mkdir -p src
